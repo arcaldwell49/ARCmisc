@@ -1,0 +1,193 @@
+# Functions to help other functions
+#' @keywords internal
+# Data ------
+.get_data_2_samples <- function(x, y = NULL, data = NULL,
+                                paired = FALSE, allow_ordered = FALSE,
+                                verbose = TRUE, ...) {
+  if (inherits(x, "formula")) {
+    # Validate:
+    if (length(x) != 3L) {
+      stop("Formula must have one of the following forms:",
+           "\n\ty ~ group,\n\ty ~ 1,\n\tPair(x,y) ~ 1",
+           call. = FALSE
+      )
+    }
+
+    # Pull columns
+    mf <- .resolve_formula(x, data, ...)
+
+    if (ncol(mf) > 2L) {
+      stop("Formula must have only one term on the RHS.", call. = FALSE)
+    }
+
+    x <- mf[[1]]
+    y <- NULL
+    if (ncol(mf) == 2L) {
+      y <- mf[[2]]
+      if (!is.factor(y)) y <- factor(y)
+    }
+  } else {
+    # Test if they are they are column names
+    x <- .resolve_char(x, data)
+    y <- .resolve_char(y, data)
+  }
+
+
+  # If x is ordered and allowed to be...
+  if (allow_ordered && is.ordered(x)) {
+    if (is.ordered(y)) {
+      if (!isTRUE(all.equal(levels(y),levels(x)))) {
+        stop("x and y are ordered, but do not have the same levels.", call. = FALSE)
+      }
+      y <- as.numeric(y)
+    }
+
+    x <- as.numeric(x)
+  }
+
+  # x should be a numeric vector or a Pair:
+  if (!is.numeric(x)) {
+    stop("Cannot compute effect size for a non-numeric vector.", call. = FALSE)
+  } else if (inherits(x, "Pair")) {
+    x <- x[, 1] - x[, 2]
+    y <- NULL
+  }
+
+
+  # y should be NULL, numeric, or a factor:
+  if (!is.null(y)) {
+    if (!is.numeric(y)) {
+      if (insight::n_unique(y) != 2) {
+        stop("Grouping variable y must have exactly 2 levels.", call. = FALSE)
+      }
+
+      if (length(x) != length(y)) {
+        stop("Grouping variable must be the same length.", call. = FALSE)
+      }
+
+      data <- Filter(length, split(x, y))
+      x <- data[[1]]
+      y <- data[[2]]
+    }
+
+    if (verbose && insight::n_unique(y) == 2) {
+      warning("'y' is numeric but has only 2 unique values.",
+              "\nIf this is a grouping variable, convert it to a factor.",
+              call. = FALSE
+      )
+    }
+  }
+
+  if (verbose && (anyNA(x) || anyNA(y))) {
+    warning("Missing values detected. NAs dropped.", call. = FALSE)
+  }
+
+  if (paired && !is.null(y)) {
+    o <- stats::complete.cases(x, y)
+    x <- x[o]
+    y <- y[o]
+  } else {
+    x <- stats::na.omit(x)
+    y <- stats::na.omit(y)
+  }
+
+
+  list(x = x, y = y)
+}
+#' @keywords internal
+.get_data_nested_groups <- function(x, groups = NULL, blocks = NULL, data = NULL,
+                                    wide = TRUE, allow_ordered = FALSE,
+                                    verbose = TRUE, ...) {
+  if (inherits(x, "formula")) {
+    if (length(x) != 3L ||
+        x[[3L]][[1L]] != as.name("|")) {
+      stop("Formula must have the 'x ~ groups | blocks'.", call. = FALSE)
+    }
+
+    x[[3L]][[1L]] <- as.name("+")
+
+    x <- .resolve_formula(x, data, ...)
+
+    if (ncol(x) != 3L) {
+      stop("Formula must have only two term on the RHS.", call. = FALSE)
+    }
+  } else if (inherits(x, "data.frame")) {
+    x <- as.matrix(x)
+  } else if (!inherits(x, c("table", "matrix", "array"))) {
+    x <- .resolve_char(x, data)
+    groups <- .resolve_char(groups, data)
+    blocks <- .resolve_char(blocks, data)
+
+    if (length(x) != length(groups) || length(x) != length(blocks)) {
+      stop("x, groups and blocks must be of the same length.", call. = FALSE)
+    }
+
+    x <- data.frame(x, groups, blocks)
+  }
+
+
+  if (inherits(x, c("matrix", "array"))) {
+    x <- as.table(x)
+  }
+
+  if (inherits(x, c("table"))) {
+    x <- as.data.frame(x)[, c(3, 2, 1)]
+  }
+
+  colnames(x) <- c("x", "groups", "blocks")
+
+  if (allow_ordered && is.ordered(x$x)) {
+    x$x <- as.numeric(x$x)
+  }
+  if (!is.numeric(x$x)) {
+    stop("Cannot compute effect size for a non-numeric vector.", call. = FALSE)
+  }
+  if (!is.factor(x$groups)) x$groups <- factor(x$groups)
+  if (!is.factor(x$blocks)) x$blocks <- factor(x$blocks)
+
+
+  if (verbose && anyNA(x)) {
+    warning("Missing values detected. NAs dropped.", call. = FALSE)
+  }
+  x <- stats::na.omit(x)
+
+  # By this point, the data is in long format
+  if (wide) {
+    x <- datawizard::data_to_wide(x,
+                                  values_from = "x",
+                                  id_cols = "blocks",
+                                  names_from = "groups"
+    )
+    x <- x[, -1]
+  }
+  x
+}
+
+# Formula ----
+
+#' @keywords internal
+#' @importFrom stats model.frame na.pass
+.resolve_formula <- function(formula, data, subset, na.action, ...) {
+  cl <- match.call(expand.dots = FALSE)
+  cl[[1]] <- quote(stats::model.frame)
+  if ("subset" %in% names(cl)) {
+    cl$subset <- substitute(subset)
+  }
+  cl$... <- NULL
+  cl$na.action <- stats::na.pass
+  eval.parent(cl)
+}
+
+#' @keywords internal
+.resolve_char <- function(nm, data) {
+  if (is.character(nm) && length(nm) == 1L) {
+    if (is.null(data)) {
+      stop("Please provide data argument.", call. = FALSE)
+    } else if (!nm %in% names(data)) {
+      stop("Column ", nm, " missing from data.", call. = FALSE)
+    }
+
+    return(data[[nm]])
+  }
+  nm
+}
