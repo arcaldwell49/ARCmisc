@@ -308,7 +308,7 @@ wmw_otest <- function(x,
   #attr(out, "approximate") <- FALSE
   #attr(out, "alternative") <- alternative
   #return(out)
-
+  attr(cint, "conf.level") <- ci
 
   names(odds) = "odds"
   names(mu) <- if(paired || !is.null(y)) "location shift" else "location"
