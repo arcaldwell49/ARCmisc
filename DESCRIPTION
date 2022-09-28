@@ -1,11 +1,14 @@
 Package: ARCmisc
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Miscellaneous functions for ARC
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: person("Aaron", "Caldwell", email = "arcaldwell49@gmail.com",
+                  role = c("aut", "cre"))
+Maintainer: Aaron Caldwell <arcaldwell49@gmail.com>
+Description: This is a package for miscellaneous functions for Aaron R. Caldwell. This is a random assortment of functions for which there is no appropriate package.
+License: GPL (>= 3)
 Encoding: UTF-8
-LazyData: true
+LazyData: false
+RoxygenNote: 7.1.2
+Depends: 
+    R (>= 4.2)

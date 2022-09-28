@@ -246,3 +246,64 @@ p_from_odds = function(odds, alternative = "two.sided", se = 1){
              "greater" = pnorm(log(odds),sd=se,lower.tail=FALSE),
              "less" = pnorm(log(odds),sd=se,lower.tail=TRUE))
 }
+
+
+# Matrix functions ------
+
+.rd_mat = function(p) {
+
+  nc = nrow(p) # Number of categories
+  ng = ncol(p) # Number of groups
+  minc = nc - 1
+
+  Rd = matrix(0, nrow = nc, ncol = ng)
+
+  for (c in 1:nc) {
+    pc = c+1
+    if(pc <= nc){
+      for (i in pc:nc) {
+        Rd[c, 2] = Rd[c, 2] + p[i, 1]
+      }
+    }
+
+    if(c-1 >=1){
+      for (j in 1:(c-1)) {
+        Rd[c, 1] = Rd[c, 1] + p[j, 2]
+      }
+    }
+
+  }
+
+  return(Rd)
+}
+
+.rs_mat = function(p) {
+
+  nc = nrow(p) # Number of categories
+  ng = ncol(p) # Number of groups
+  minc = nc - 1
+
+  Rs = matrix(0, nrow = nc, ncol = ng)
+
+  for (c in 1:nc) {
+    pc = c+1
+    if(pc <= nc){
+      for (i in pc:nc) {
+
+        Rs[c, 1] = Rs[c, 1] + p[i, 2]
+      }
+    }
+
+    if(c-1 >=1){
+      for (j in 1:(c-1)) {
+        Rs[c, 2] = Rs[c, 2] + p[j, 1]
+      }
+    }
+
+  }
+
+  return(Rs)
+}
+
+
+
