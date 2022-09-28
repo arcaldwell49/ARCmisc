@@ -191,3 +191,58 @@
   }
   nm
 }
+
+# conversions -----
+
+odds_to_probs <- function(odds, log = FALSE) {
+  if (log) {
+    stats::plogis(odds)
+  } else {
+    stats::plogis(log(odds))
+  }
+}
+
+probs_to_odds <- function(probs, log = FALSE) {
+  if (log) {
+    stats::qlogis(probs)
+  } else {
+    exp(stats::qlogis(probs))
+  }
+}
+
+rb_to_odds <- function(rb) {
+  probs_to_odds(rb_to_cstat(rb))
+}
+
+rb_to_cstat <- function(rb) {
+  (rb + 1) / 2
+}
+
+cstat_to_rb <- function(cstat){
+  2*cstat-1
+}
+
+z_to_rho <- function(z){
+  tanh(z)
+}
+
+rho_to_z <- function(rho){
+  atanh(rho)
+}
+
+p_from_z <- function(z, alternative = "two.sided", se = 1){
+
+  p = switch(alternative,
+         "two.sided" = 2*pnorm(-abs(z), sd = se),
+         "greater" = pnorm(z, sd = se, lower.tail = FALSE),
+         "less" = pnorm(z, sd = se, lower.tail = TRUE))
+
+  return(p)
+}
+
+p_from_odds = function(odds, alternative = "two.sided", se = 1){
+  p = switch(alternative,
+             "two.sided" = pnorm(abs(log(odds)),sd=se,lower.tail=FALSE)*2,
+             "greater" = pnorm(log(odds),sd=se,lower.tail=FALSE),
+             "less" = pnorm(log(odds),sd=se,lower.tail=TRUE))
+}

@@ -1,6 +1,5 @@
-#' Generalized Odds Ratio for Ordinal Data
+#' Rank-based test using the Generalized Odds Ratio for one, two, and paired samples
 #'
-#' @aliases print.Genodds
 #'
 #' @description Performs Agresti's Generalized Odds Ratios (GenOR) for two-group, paired samples, and one sample data..
 #'
@@ -58,10 +57,8 @@
 #'
 #' @examples
 #' # Use the alteplase dataset provided by package and calculate genodds
-#' df <- alteplase
-#' x <- genodds(df$mRS,df$treat,df$time)
-#' x
-#' print(x,nnt=TRUE)
+#'
+#' wmw_otest(extra ~ group, data = sleep, paired = TRUE)
 #'
 #' @references
 #' Agresti, A. (1980). Generalized odds ratios for ordinal data.
@@ -84,14 +81,14 @@
 #'
 #' @export
 wmw_otest <- function(x,
-                     y = NULL,
-                     data = NULL,
-                     mu = 0,
-                     ci = 0.95,
-                     alternative = "two.sided",
-                     paired = FALSE,
-                     verbose = TRUE,
-                     ...) {
+                      y = NULL,
+                      data = NULL,
+                      mu = 0,
+                      ci = 0.95,
+                      alternative = "two.sided",
+                      paired = FALSE,
+                      verbose = TRUE,
+                      ...) {
 
 
   alternative <- match.arg(alternative)
@@ -109,15 +106,17 @@ wmw_otest <- function(x,
       stop("'ci' must be a single number between 0 and 1")
     ci.level <- if (alternative == "two.sided") ci else 2 * ci - 1
     alpha <- 1 - ci.level
+  } else{
+    stop("'ci' must be a single number between 0 and 1")
   }
 
-  if (is.null(ci)) {
-    alternative <- NULL
-    #interval = c(NA,NA)
+  #if (is.null(ci)) {
+  #  alternative <- NULL
+  #  #interval = c(NA,NA)
 
-  } else {
-    ci_method <- list(method = "normal")
-  }
+  #} else {
+  #  ci_method <- list(method = "normal")
+  #}
 
   ## Prep data
   out <- .get_data_2_samples(x, y, data, verbose, ...)
@@ -154,7 +153,7 @@ wmw_otest <- function(x,
 
   if(length(x) < 1L)
     stop("not enough (finite) 'x' observations")
-  CORRECTION <- 0
+
   if(is.null(y)) { ##------------------ 1-sample/paired case -------------------
     z <- x - mu
 
@@ -166,19 +165,24 @@ wmw_otest <- function(x,
     #  stop("Odds ratio cannot be estimated. No overlap with zero/null.")
     #}
     odds = probs_to_odds(cstat)
+    rho = cstat_to_rb(cstat)
+    zstat = rho_to_z(rho)
 
 
-    if(is.numeric(ci)){
-      # Wilson interval for binomial prob
-      # Then converted to odds
-      zstar <- qnorm(1-alpha/2)
-      zstar2 = zstar^2
-      p1 <- cstat + 0.5 * zstar2/n_x
-      p2 <- zstar * sqrt((cstat * (1 - cstat) + 0.25 * zstar2/n_x)/n_x)
-      p3 <- 1 + zstar2/n_x
-      lcl <- (p1 - p2)/p3
-      ucl <- (p1 + p2)/p3
-      interval <- probs_to_odds(c(lcl,ucl))
+
+    if (ci_method == "normal") {
+      rho = cstat_to_rb(cstat)
+      zstat = rho_to_z(rho)
+      # Stolen from effectsize
+      maxw <- (n_x ^ 2 + n_x) / 2
+      SE <- sqrt((2 * n_x ^ 3 + 3 * n_x ^ 2 + n_x) / 6) / maxw
+      interval <- z_to_rho(zstat + c(-1, 1) * qnorm(1 - alpha / 2) * SE) |>
+        rb_to_cstat() |> probs_to_odds()
+      p_value = p_from_z(zstat, alternative, SE)
+
+
+    } else {
+      stop("ci_method must be set to \"normal\" for one/paired sample(s)")
     }
 
 
@@ -207,21 +211,22 @@ wmw_otest <- function(x,
     Rt = p[, 2:1]
     Rs = .rs_mat(p)
     Rd = .rd_mat(p)
-    Rs = Rs + (1 - 0.5) * Rt
+    Rs = Rs + (0.5) * Rt
     Rd = Rd + 0.5 * Rt
     Pc = sum(p * Rs)
     Pd = sum(p * Rd)
 
     odds = (Pc/Pd)
-
+    cstat = odds_to_probs(odds)
     #if(odds == 0 || odds == Inf){
     #  stop("Odds ratio cannot be estimated. No overlap between groups.")
     #}
 
     ### ----- ci: normal approx ----
     ### bootstrap removed
-    if(is.numeric(ci)){
-
+    if(ci_method == "gamma"){
+      n1 <- length(x)
+      n2 <- length(y)
       #odds2 = (Pc/Pd)
       # Not to self: checks calcs from above match matrix calcs
       #if(round(odds2,7) != round(odds,7)){
@@ -229,10 +234,25 @@ wmw_otest <- function(x,
       #}
       SEodds = 2/Pd * (sum(p * (odds * Rd - Rs)^2)/N)^0.5
       SElnodds = SEodds/odds
+
       interval = exp(qnorm(c(alpha/2, 1 - alpha/2), mean = log(odds),
                            sd = SElnodds))
+      p_value = p_from_odds(odds, alternative, SElnodds)
+      SE = 2/Pd*(sum(p*(odds*Rd-Rs)^2)/sum(n1,n2))^0.5
 
-    } #else if(ci_method == "percent"){
+    } else if(ci_method == "normal"){
+      n1 <- length(x)
+      n2 <- length(y)
+      SE <- sqrt((n1 + n2 + 1) / (3 * n1 * n2))
+      rho = cstat_to_rb(cstat)
+      zstat = rho_to_z(rho)
+      interval <- z_to_rho(zstat + c(-1, 1) * qnorm(1 - alpha / 2) * SE) |>
+        rb_to_cstat() |> probs_to_odds()
+      p_value = p_from_z(zstat, alternative, SE)
+
+    }
+
+    #else if(ci_method == "percent"){
     #
     #if (insight::check_if_installed("boot", "for estimating CIs", stop = FALSE)) {
     #  data2 = data.frame(
@@ -260,13 +280,28 @@ wmw_otest <- function(x,
     out$CI_high = if (alternative == "greater") Inf else interval[2]
   }
 
-  class(out) <- c("effectsize_difference", "effectsize_table", "see_effectsize_table", class(out))
-  attr(out, "paired") <- paired
-  attr(out, "mu") <- mu
-  attr(out, "ci") <- ci
-  attr(out, "ci_method") <- ci_method
-  attr(out, "approximate") <- FALSE
-  attr(out, "alternative") <- alternative
-  return(out)
+  #class(out) <- c("effectsize_difference", "effectsize_table", "see_effectsize_table", class(out))
+  #attr(out, "paired") <- paired
+  #attr(out, "mu") <- mu
+  #attr(out, "ci") <- ci
+  #attr(out, "ci_method") <- ci_method
+  #attr(out, "approximate") <- FALSE
+  #attr(out, "alternative") <- alternative
+  #return(out)
+
+  names(mu) <- if(paired || !is.null(y)) "location shift" else "location"
+  RVAL <- list(statistic = STATISTIC,
+               parameter = NULL,
+               p.value = as.numeric(PVAL),
+               null.value = mu,
+               alternative = alternative,
+               method = METHOD,
+               data.name = DNAME)
+  if(conf.int)
+    RVAL <- c(RVAL,
+              list(conf.int = cint,
+                   estimate = ESTIMATE))
+  class(RVAL) <- "htest"
+  RVAL
 }
 
