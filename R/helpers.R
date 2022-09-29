@@ -305,5 +305,17 @@ p_from_odds = function(odds, alternative = "two.sided", se = 1){
   return(Rs)
 }
 
-
+zsimp = function(z){
+  sr = datawizard::ranktransform(z,verbose = FALSE,
+                                 sign = TRUE)
+  sr = ifelse(is.na(sr),0,sr)
+  z <- sum(sr)
+  return(z)
+}
+zse_simp = function(z){
+  sr = datawizard::ranktransform(z,verbose = FALSE,
+                                 sign = TRUE)
+  sr = ifelse(is.na(sr),0,sr)
+  return(sqrt(sum(sr ^ 2)))
+}
 

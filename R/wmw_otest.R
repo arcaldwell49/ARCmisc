@@ -158,39 +158,24 @@ wmw_otest <- function(x,
   if(is.null(y)) { ##------------------ 1-sample/paired case -------------------
     z <- x - mu
 
-    Ry <- effectsize:::.safe_ranktransform(z, sign = TRUE, verbose = verbose)
-    #Ry0 <-ifelse(is.na(Ry),1,0)
-    Ry2 <- stats::na.omit(Ry)
+    zstat = zsimp(z)
+    SE = zse_simp(z)
 
-    n <- length(z)
-    S <- (n * (n + 1) / 2)
-
-    minz = min(abs(Ry2)) - min(abs(Ry2))/2
-    Ry_pos = ifelse(is.na(Ry),minz,Ry)
-    Ry_1 = effectsize:::.safe_ranktransform(Ry_pos, sign = TRUE, verbose = verbose)
-    Ry_neg = ifelse(is.na(Ry),-1*minz,Ry)
-    Ry_2 = effectsize:::.safe_ranktransform(Ry_neg, sign = TRUE, verbose = verbose)
-
-    U1 <- sum(Ry_pos[Ry_pos > 0], na.rm = TRUE) #+ 0.5*sum(Ry0[Ry0 == 1], na.rm = TRUE)
-    U2 <- -sum(Ry_neg[Ry_neg < 0], na.rm = TRUE) #+ -0.5*sum(Ry0[Ry0 == 1], na.rm = TRUE)
-
-    u_ <- U1 / S
-    f_ <- U2 / S
-    rho = u_ - f_
+    odds = z_to_rho(zstat) |> rb_to_cstat() |> probs_to_odds()
     #odds = probs_to_odds(cstat)
     #rho = cstat_to_rb(cstat)
-    cstat = rb_to_cstat(rho)
-    odds = probs_to_odds(cstat)
-    zstat = rho_to_z(rho)
+    #cstat = rb_to_cstat(rho)
+    #odds = probs_to_odds(cstat)
+    #zstat = rho_to_z(rho)
 
 
 
     if (ci_method == "normal") {
-      rho = cstat_to_rb(cstat)
-      zstat = rho_to_z(rho)
+      #rho = cstat_to_rb(cstat)
+      #zstat = rho_to_z(rho)
       # Stolen from effectsize
-      maxw <- (n_x ^ 2 + n_x) / 2
-      SE <- sqrt((2 * n_x ^ 3 + 3 * n_x ^ 2 + n_x) / 6) / maxw
+      #maxw <- (n_x ^ 2 + n_x) / 2
+      #SE <- sqrt((2 * n_x ^ 3 + 3 * n_x ^ 2 + n_x) / 6) / maxw
       interval <- z_to_rho(zstat + c(-1, 1) * qnorm(1 - alpha / 2) * SE) |>
         rb_to_cstat() |> probs_to_odds()
       p_value = p_from_z(zstat, alternative, SE)
@@ -198,7 +183,7 @@ wmw_otest <- function(x,
       STATISTIC = zstat
       names(STATISTIC) = "z"
       PARA = SE
-      names(PARA) = "SD for z"
+      names(PARA) = "SE for z"
 
 
     } else {
@@ -277,7 +262,7 @@ wmw_otest <- function(x,
       STATISTIC = zstat
       names(STATISTIC) = "z"
       PARA = SE
-      names(PARA) = "SD for z"
+      names(PARA) = "SE for z"
 
 
     }
@@ -322,7 +307,7 @@ wmw_otest <- function(x,
   #attr(out, "approximate") <- FALSE
   #attr(out, "alternative") <- alternative
   #return(out)
-  attr(cint, "conf.level") <- ci
+  attr(interval, "conf.level") <- ci
 
   names(odds) = "odds"
   names(mu) <- if(paired || !is.null(y)) "location shift" else "location"
