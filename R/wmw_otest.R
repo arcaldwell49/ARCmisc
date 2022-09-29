@@ -158,15 +158,29 @@ wmw_otest <- function(x,
   if(is.null(y)) { ##------------------ 1-sample/paired case -------------------
     z <- x - mu
 
-    n_x = as.double(length(x))
-    n_a <- sum(z > 0) + 0.5*sum(z == 0)
+    Ry <- effectsize:::.safe_ranktransform(z, sign = TRUE, verbose = verbose)
+    #Ry0 <-ifelse(is.na(Ry),1,0)
+    Ry2 <- stats::na.omit(Ry)
 
-    cstat = n_a / n_x
-    #if(cstat == 0 || cstat == 1){
-    #  stop("Odds ratio cannot be estimated. No overlap with zero/null.")
-    #}
+    n <- length(z)
+    S <- (n * (n + 1) / 2)
+
+    minz = min(abs(Ry2)) - min(abs(Ry2))/2
+    Ry_pos = ifelse(is.na(Ry),minz,Ry)
+    Ry_1 = effectsize:::.safe_ranktransform(Ry_pos, sign = TRUE, verbose = verbose)
+    Ry_neg = ifelse(is.na(Ry),-1*minz,Ry)
+    Ry_2 = effectsize:::.safe_ranktransform(Ry_neg, sign = TRUE, verbose = verbose)
+
+    U1 <- sum(Ry_pos[Ry_pos > 0], na.rm = TRUE) #+ 0.5*sum(Ry0[Ry0 == 1], na.rm = TRUE)
+    U2 <- -sum(Ry_neg[Ry_neg < 0], na.rm = TRUE) #+ -0.5*sum(Ry0[Ry0 == 1], na.rm = TRUE)
+
+    u_ <- U1 / S
+    f_ <- U2 / S
+    rho = u_ - f_
+    #odds = probs_to_odds(cstat)
+    #rho = cstat_to_rb(cstat)
+    cstat = rb_to_cstat(rho)
     odds = probs_to_odds(cstat)
-    rho = cstat_to_rb(cstat)
     zstat = rho_to_z(rho)
 
 
