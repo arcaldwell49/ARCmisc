@@ -194,57 +194,57 @@
 
 # conversions -----
 
-odds_to_probs <- function(odds, log = FALSE) {
+odds_to_pr <- function(x, log = FALSE) {
   if (log) {
-    stats::plogis(odds)
+    stats::plogis(x)
   } else {
-    stats::plogis(log(odds))
+    stats::plogis(log(x))
   }
 }
 
-probs_to_odds <- function(probs, log = FALSE) {
+pr_to_odds <- function(x, log = FALSE) {
   if (log) {
-    stats::qlogis(probs)
+    stats::qlogis(x)
   } else {
-    exp(stats::qlogis(probs))
+    exp(stats::qlogis(x))
   }
 }
 
-rb_to_odds <- function(rb) {
-  probs_to_odds(rb_to_cstat(rb))
+rb_to_odds <- function(x) {
+  pr_to_odds(rb_to_cstat(x))
 }
 
-rb_to_cstat <- function(rb) {
-  (rb + 1) / 2
+rb_to_cstat <- function(x) {
+  (x + 1) / 2
 }
 
-cstat_to_rb <- function(cstat){
-  2*cstat-1
+cstat_to_rb <- function(x){
+  2*x-1
 }
 
-z_to_rho <- function(z){
-  tanh(z)
+z_to_rho <- function(x){
+  tanh(x)
 }
 
-rho_to_z <- function(rho){
-  atanh(rho)
+rho_to_z <- function(x){
+  atanh(x)
 }
 
-p_from_z <- function(z, alternative = "two.sided", se = 1){
+p_from_z <- function(x, alternative = "two.sided", se = 1){
 
   p = switch(alternative,
-         "two.sided" = 2*pnorm(-abs(z), sd = se),
-         "greater" = pnorm(z, sd = se, lower.tail = FALSE),
-         "less" = pnorm(z, sd = se, lower.tail = TRUE))
+         "two.sided" = 2*pnorm(-abs(x), sd = se),
+         "greater" = pnorm(x, sd = se, lower.tail = FALSE),
+         "less" = pnorm(x, sd = se, lower.tail = TRUE))
 
   return(p)
 }
 
-p_from_odds = function(odds, alternative = "two.sided", se = 1){
+p_from_odds = function(x, alternative = "two.sided", se = 1){
   p = switch(alternative,
-             "two.sided" = pnorm(abs(log(odds)),sd=se,lower.tail=FALSE)*2,
-             "greater" = pnorm(log(odds),sd=se,lower.tail=FALSE),
-             "less" = pnorm(log(odds),sd=se,lower.tail=TRUE))
+             "two.sided" = pnorm(abs(log(x)),sd=se,lower.tail=FALSE)*2,
+             "greater" = pnorm(log(x),sd=se,lower.tail=FALSE),
+             "less" = pnorm(log(x),sd=se,lower.tail=TRUE))
 }
 
 
@@ -306,7 +306,7 @@ p_from_odds = function(odds, alternative = "two.sided", se = 1){
 }
 
 zsimp = function(z){
-  sr = datawizard::ranktransform(z,verbose = FALSE,
+  sr = ranktransform(z,verbose = FALSE,
                                  sign = TRUE)
   sr = ifelse(is.na(sr),0,sr)
   z <- sum(sr)

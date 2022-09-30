@@ -71,6 +71,7 @@
 #' and clinically interpretable approach for analysis of modified Rankin
 #' outcomes. \emph{Stroke}, 43(3), 664-669.
 #'
+#' @importFrom datawizard ranktransform
 #' @export
 wmw_otest <- function(x,
                       y = NULL,
@@ -161,11 +162,11 @@ wmw_otest <- function(x,
     zstat = zsimp(z)
     SE = zse_simp(z)
 
-    odds = z_to_rho(zstat) |> rb_to_cstat() |> probs_to_odds()
-    #odds = probs_to_odds(cstat)
+    odds = z_to_rho(zstat) |> rb_to_cstat() |> pr_to_odds()
+    #odds = pr_to_odds(cstat)
     #rho = cstat_to_rb(cstat)
     #cstat = rb_to_cstat(rho)
-    #odds = probs_to_odds(cstat)
+    #odds = pr_to_odds(cstat)
     #zstat = rho_to_z(rho)
 
 
@@ -177,7 +178,7 @@ wmw_otest <- function(x,
       #maxw <- (n_x ^ 2 + n_x) / 2
       #SE <- sqrt((2 * n_x ^ 3 + 3 * n_x ^ 2 + n_x) / 6) / maxw
       interval <- z_to_rho(zstat + c(-1, 1) * qnorm(1 - alpha / 2) * SE) |>
-        rb_to_cstat() |> probs_to_odds()
+        rb_to_cstat() |> pr_to_odds()
       p_value = p_from_z(zstat, alternative, SE)
 
       STATISTIC = zstat
@@ -222,7 +223,7 @@ wmw_otest <- function(x,
     Pd = sum(p * Rd)
 
     odds = (Pc/Pd)
-    cstat = odds_to_probs(odds)
+    cstat = odds_to_pr(odds)
     #if(odds == 0 || odds == Inf){
     #  stop("Odds ratio cannot be estimated. No overlap between groups.")
     #}
@@ -257,7 +258,7 @@ wmw_otest <- function(x,
       rho = cstat_to_rb(cstat)
       zstat = rho_to_z(rho)
       interval <- z_to_rho(zstat + c(-1, 1) * qnorm(1 - alpha / 2) * SE) |>
-        rb_to_cstat() |> probs_to_odds()
+        rb_to_cstat() |> pr_to_odds()
       p_value = p_from_z(zstat, alternative, SE)
       STATISTIC = zstat
       names(STATISTIC) = "z"
