@@ -166,20 +166,14 @@ wmw_otest <- function(x,
     Tee = min(Rplus, Rminus)
     n = length(RR)
     if (Rplus >= Rminus) {
-      RC = -4 * abs((Tee - (Rplus + Rminus)/2)/n/(n + 1))
+      rho = -4 * abs((Tee - (Rplus + Rminus)/2)/n/(n + 1))
     }
     if (Rplus < Rminus) {
-      RC = 4 * abs((Tee - (Rplus + Rminus)/2)/n/(n + 1))
+      rho = 4 * abs((Tee - (Rplus + Rminus)/2)/n/(n + 1))
     }
-
-    odds = z_to_rho(zstat) |> rb_to_cstat() |> pr_to_odds()
-    #odds = pr_to_odds(cstat)
-    #rho = cstat_to_rb(cstat)
-    cstat = rb_to_cstat(RC)
-    #odds = pr_to_odds(cstat)
+    #cstat = rb_to_cstat(RC)
     zstat = rho_to_z(rho)
-
-
+    odds =  rb_to_cstat(rho) |> pr_to_odds()
 
     if (ci_method == "normal") {
       #rho = cstat_to_rb(cstat)
