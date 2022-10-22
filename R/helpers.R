@@ -94,74 +94,7 @@
 
   list(x = x, y = y)
 }
-#' @keywords internal
-.get_data_nested_groups <- function(x, groups = NULL, blocks = NULL, data = NULL,
-                                    wide = TRUE, allow_ordered = FALSE,
-                                    verbose = TRUE, ...) {
-  if (inherits(x, "formula")) {
-    if (length(x) != 3L ||
-        x[[3L]][[1L]] != as.name("|")) {
-      stop("Formula must have the 'x ~ groups | blocks'.", call. = FALSE)
-    }
 
-    x[[3L]][[1L]] <- as.name("+")
-
-    x <- .resolve_formula(x, data, ...)
-
-    if (ncol(x) != 3L) {
-      stop("Formula must have only two term on the RHS.", call. = FALSE)
-    }
-  } else if (inherits(x, "data.frame")) {
-    x <- as.matrix(x)
-  } else if (!inherits(x, c("table", "matrix", "array"))) {
-    x <- .resolve_char(x, data)
-    groups <- .resolve_char(groups, data)
-    blocks <- .resolve_char(blocks, data)
-
-    if (length(x) != length(groups) || length(x) != length(blocks)) {
-      stop("x, groups and blocks must be of the same length.", call. = FALSE)
-    }
-
-    x <- data.frame(x, groups, blocks)
-  }
-
-
-  if (inherits(x, c("matrix", "array"))) {
-    x <- as.table(x)
-  }
-
-  if (inherits(x, c("table"))) {
-    x <- as.data.frame(x)[, c(3, 2, 1)]
-  }
-
-  colnames(x) <- c("x", "groups", "blocks")
-
-  if (allow_ordered && is.ordered(x$x)) {
-    x$x <- as.numeric(x$x)
-  }
-  if (!is.numeric(x$x)) {
-    stop("Cannot compute effect size for a non-numeric vector.", call. = FALSE)
-  }
-  if (!is.factor(x$groups)) x$groups <- factor(x$groups)
-  if (!is.factor(x$blocks)) x$blocks <- factor(x$blocks)
-
-
-  if (verbose && anyNA(x)) {
-    warning("Missing values detected. NAs dropped.", call. = FALSE)
-  }
-  x <- stats::na.omit(x)
-
-  # By this point, the data is in long format
-  if (wide) {
-    x <- datawizard::data_to_wide(x,
-                                  values_from = "x",
-                                  id_cols = "blocks",
-                                  names_from = "groups"
-    )
-    x <- x[, -1]
-  }
-  x
-}
 
 # Formula ----
 
@@ -319,92 +252,192 @@ zse_simp = function(z){
   return(sqrt(sum(sr ^ 2)))
 }
 
-# One sample helpers ---------
+# plot summaries ----
 
-wilz = function (x, y = NULL, mu = 0, paired = FALSE,
-                 correct = FALSE)
-{
-  if (!missing(mu) && ((length(mu) > 1L) || !is.finite(mu)))
-    stop("'mu' must be a single number")
-  if (!is.numeric(x))
-    stop("'x' must be numeric")
-  if (!is.null(y)) {
-    if (!is.numeric(y))
-      stop("'y' must be numeric")
-    if (paired) {
-      if (length(x) != length(y))
-        stop("'x' and 'y' must have the same length")
-      OK <- complete.cases(x, y)
-      x <- x[OK] - y[OK]
-      y <- NULL
-    }
-    else {
-      x <- x[is.finite(x)]
-      y <- y[is.finite(y)]
-    }
-  }
-  else {
-    if (paired)
-      stop("'y' is missing for paired test")
-    x <- x[is.finite(x)]
-  }
-  if (length(x) < 1L)
-    stop("not enough (finite) 'x' observations")
-  CORRECTION <- 0
-  if (is.null(y)) {
-    x <- x - mu
-    ZEROES <- any(x == 0)
-    if (ZEROES)
-      x <- x[x != 0]
-    n <- as.double(length(x))
-    if (is.null(exact)) {
-      exact <- (n < 50)
-    }
-    r <- rank(abs(x))
-    STATISTIC <- setNames(sum(r[x > 0]), "V")
-    TIES <- length(r) != length(unique(r))
-    if (exact && !TIES && !ZEROES) {
-      z = NA
-    }
-    else {
-      NTIES <- table(r)
-      z <- STATISTIC - n * (n + 1)/4
-      SIGMA <- sqrt(n * (n + 1) * (2 * n + 1)/24 - sum(NTIES^3 -
-                                                         NTIES)/48)
-      if (correct) {
-        CORRECTION <- sign(z) * 0.5
-      }
-      z <- (z - CORRECTION)/SIGMA
-    }
-  }
-  else {
-    if (length(y) < 1L)
-      stop("not enough 'y' observations")
-    r <- rank(c(x - mu, y))
-    n.x <- as.double(length(x))
-    n.y <- as.double(length(y))
+## need to fix summary functions
+sum_sdl = function(x){
+  mu = mean(x, na.rm = TRUE)
+  lower = mu - sd(x, na.rm = TRUE)
+  upper = mu + sd(x, na.rm = TRUE)
+  vec = data.frame(y =  mu,
+                   ymin = lower,
+                   ymax = upper)
 
-    STATISTIC <- c(W = sum(r[seq_along(x)]) - n.x * (n.x +
-                                                       1)/2)
-    TIES <- (length(r) != length(unique(r)))
-
-    else {
-      NTIES <- table(r)
-      z <- STATISTIC - n.x * n.y/2
-      SIGMA <- sqrt((n.x * n.y/12) * ((n.x + n.y + 1) -
-                                        sum(NTIES^3 - NTIES)/((n.x + n.y) * (n.x + n.y -
-                                                                               1))))
-      if (correct) {
-        CORRECTION <- sign(z) * 0.5
-      }
-      z <- (z - CORRECTION)/SIGMA
-      if (exact && TIES) {
-        warning("cannot compute exact p-value with ties")
-      }
-    }
-  }
-  z = signif(z, digits = digits)
-  names(z) = "z"
-  return(z)
+  return(vec)
 }
 
+plt_ngrp_pt = function(data,
+                       tpanel = FALSE,
+                       trace = FALSE,
+                       sum_stat = "mean",
+                       err_stat = "mean_sdl",
+                       show_points = TRUE,
+                       sum_size = 1.25,
+                       sum_alpha = 1,
+                       point_size = 1,
+                       point_alpha = 1,
+                       err_width = .2,
+                       show_summary = TRUE,
+                       show_slab = show_slab){
+  if(show_points){
+    x_nudge = err_width
+  } else {
+    x_nudge = 0
+  }
+  g1 = ggplot(data,
+              aes(x=x,y=y,
+                  group = 1))
+
+  if(show_points){
+    g1 = g1 + geom_dots(dotsize = 1,
+                        binwidth = .5*point_size,
+                        side = "topleft",
+                        fill = "black",
+                        scale = .25,
+                        alpha = point_alpha,
+                        color = "black",
+                        layout = "weave")
+    #geom_point(position=position_jitter(height = 0,
+    #                          width = .2),
+    #           alpha = point_alpha,
+    #           size = point_size)
+  }
+
+  if(show_slab){
+    g1 = g1 + stat_slab(scale = err_width*2,
+                        #binwidth = .5*point_size,
+                        side = "topleft",
+                        #fill = "black",
+                        #scale = err_width,
+                        alpha = point_alpha,
+                        color = "black",
+                        fill = "darkgrey",
+                        #layout = "weave",
+                        position=position_dodge(err_width*2)
+    )
+  }
+
+  if(trace){
+    g1 = g1 + stat_summary(
+      fun = sum_stat,
+      geom = "line",
+      #shape = "square",
+      #size = 1.25 * 2,
+      alpha = .75*sum_alpha,
+      size = sum_size*.75,
+      color = "darkgray",
+      position = position_nudge(x = x_nudge, y = 0)
+    )
+  }
+
+  if(show_summary){
+
+
+  g1 = g1 +
+    stat_summary(fun.data = err_stat,
+                 fun.args = list(mult = 1),
+                 alpha = sum_alpha,
+                 width = err_width,
+                 geom = "errorbar",
+                 colour = "darkgray", size = sum_size,
+                 position=position_nudge(x = x_nudge, y = 0)) +
+    stat_summary(fun = sum_stat, geom = "point",
+                 shape = "square",
+                 size = sum_size*2,
+                 alpha = sum_alpha,
+                 color = "darkgray",
+                 position=position_nudge(x = x_nudge, y = 0))
+  }
+
+  if(tpanel){
+    g1 = g1 + facet_wrap(~panel)
+  }
+
+  return(g1)
+}
+
+plt_grp_pt = function(data,
+                      tpanel = FALSE,
+                      trace = FALSE,
+                      sum_stat = "mean",
+                      err_stat = "mean_sdl",
+                      show_points = TRUE,
+                      sum_size = 1.25,
+                      sum_alpha = 1,
+                      point_size = 1,
+                      point_alpha = 1,
+                      err_width = .2,
+                      show_summary = TRUE,
+                      show_slab = show_slab){
+  if(show_points){
+    x_nudge = err_width
+  } else {
+    x_nudge = 0
+  }
+  g1 = ggplot(data,
+              aes(x=x,y=y,
+                  color = group,
+                  fill = group))
+
+  if(show_points){
+    g1 = g1 + geom_dots(dotsize = 1,
+                        binwidth = .5*point_size,
+                        side = "topleft",
+                        #fill = "black",
+                        scale = err_width,
+                        alpha = point_alpha,
+                        color = "black",
+                        layout = "weave",
+                        position=position_dodge(err_width*2)
+    )
+    #geom_point(position=position_jitter(height = 0,
+    #                          width = .2),
+    #           alpha = point_alpha,
+    #           size = point_size)
+  }
+
+  if(show_slab){
+    g1 = g1 + stat_slab(scale = err_width*2,
+                        #binwidth = .5*point_size,
+                        side = "topleft",
+                        #fill = "black",
+                        #scale = err_width,
+                        alpha = point_alpha,
+                        color = "black",
+                        #layout = "weave",
+                        position=position_dodge(err_width*2)
+    )
+  }
+
+  if(trace){
+    g1 = g1 + stat_summary(
+      aes(group = group),
+      fun = sum_stat,
+      geom = "line",
+      #shape = "square",
+      #size = 1.25 * 2,
+      alpha = .75*sum_alpha,
+      size = sum_size*.75,
+      #color = "darkgray",
+      position=position_dodge(err_width*2)
+    )
+  }
+
+  if(show_summary){
+  g1 = g1 +  stat_summary(fun.data = err_stat,
+                 fun.args = list(mult = 1),
+                 alpha = sum_alpha,
+                 #width = err_width,
+                 geom = "pointrange",
+                 shape = "square",
+                 #colour = "darkgray",
+                 size = .75*sum_size,
+                 position=position_dodge(err_width*2))
+  }
+
+  if(tpanel){
+    g1 = g1 + facet_wrap(~panel)
+  }
+
+  return(g1)
+}
