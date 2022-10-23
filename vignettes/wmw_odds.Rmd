@@ -6,7 +6,7 @@ vignette: >
   %\VignetteIndexEntry{Wilcoxon-Mann-Whitney Odds}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: references.json
+bibliography: references.bib
 ---
 
 ```{r, include = FALSE}
@@ -22,7 +22,9 @@ library(ARCmisc)
 
 # Short Background
 
-As an alternative, or in supplement to, Wilcoxon-Mann-Whitney rank sum/signed rank tests @agresti1980 and @wmw_odds have suggested a measure of effect size in the form of "odds". This can be considered as a transformation of the rank-biserial correlation or the concordance probability^[You can see this in blog posts by [Frank Harrell](https://www.fharrell.com/post/wpo/) or in the [effectsize R package](https://easystats.github.io/effectsize/) ]
+As an alternative, or in supplement to, Wilcoxon-Mann-Whitney rank sum/signed rank tests @agresti1980 and @wmw_odds have suggested a measure of effect size in the form of "odds" [@wmw_odds; @agresti1980]. This can be considered as a transformation of the rank-biserial correlation or the concordance probability[^1]
+
+[^1]: You can see this in blog posts by [Frank Harrell](https://www.fharrell.com/post/wpo/) or in the [effectsize R package](https://easystats.github.io/effectsize/)
 
 # Implementation
 
@@ -54,6 +56,5 @@ data(sleep)
 
 wmw_otest(sleep$extra)
 ```
-
 
 # References

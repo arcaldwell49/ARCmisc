@@ -5,6 +5,7 @@ vignette: >
   %\VignetteIndexEntry{Summary Plots for Factorial Designs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+references: references.json
 ---
 
 ```{r, include = FALSE}
