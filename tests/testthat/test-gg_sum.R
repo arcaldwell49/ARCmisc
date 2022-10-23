@@ -47,5 +47,11 @@ test_that("basic run", {
                   point_alpha = .5,
                   show_slab = TRUE)
 
+  test6 = gg_sum(data = mt2,
+                 y = mpg,
+                 x = cyl,
+                 point_alpha = .7,
+                 point_color = "skyblue")
+
 
 })

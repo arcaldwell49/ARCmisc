@@ -1,0 +1,151 @@
+---
+title: "Summary Plots for Factorial Designs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Summary Plots for Factorial Designs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ARCmisc)
+library(ggplot2)
+```
+
+
+The `gg_sum` function can be used to create simple summaries of data from factorial experiments.
+Like all functions in this packages, they are created to simplify code that I commonly have to write.
+
+
+# Data
+
+To start, let us use the `mtcars` dataset to make some simple plots.
+Just as a note, this plotting function is meant to plot 1 continuous variable,
+on the y-axis and then use factors to plot on the x-axis, color, or facets.
+
+```{r}
+mt2 = mtcars
+mt2$cyl = as.factor(mtcars$cyl)
+mt2$am = as.factor(mtcars$am)
+```
+
+# Simple one-way plot
+
+## Default
+
+```{r}
+gg_sum(
+  data = mt2,
+  y = mpg,
+  x = cyl
+) + theme_classic()
+```
+
+## Customized
+
+The plots have customizing features.
+
+```{r}
+gg_sum(
+  data = mt2,
+  y = mpg,
+  x = cyl,
+  sum_color = "skyblue",
+  point_color = "skyblue",
+  point_alpha = .5,
+) + theme_classic()
+```
+
+# Adding groups
+
+```{r}
+gg_sum(
+  data = mt2,
+  y = mpg,
+  x = cyl,
+  group = am,
+) + theme_classic()
+```
+
+## Customized
+
+The dots need to have the fill aspect also applied.
+
+```{r}
+gg_sum(
+  data = mt2,
+  y = mpg,
+  x = cyl,
+  group = am,
+  point_alpha = .5,
+  sum_alpha = .6
+) + 
+  scale_color_viridis_d(end = .8) +
+  scale_fill_viridis_d(end = .8) +
+  theme_classic()
+```
+
+# Facets
+
+Rather than, or in addition to, facets can be applied.
+
+```{r}
+gg_sum(
+  data = mt2,
+  y = mpg,
+  x = am,
+  panel = cyl,
+  trace = FALSE,
+  point_alpha = .5,
+) + theme_classic()
+```
+
+# Bigger Data
+
+The plots above really only work with small datasets. I have other features for
+larger datasets.
+
+```{r}
+data("ChickWeight")
+cw = ChickWeight
+cw$time = as.factor(cw$Time)
+cw$diet = as.factor(cw$Diet)
+cw = cw[which(as.numeric(cw$Time) < 8),]
+```
+
+## No Grouping
+
+We can suppress the points and plot a "slab" instead
+
+```{r}
+gg_sum(cw,
+       x = time,
+       y = weight,
+       sum_color = "darkgrey",
+       sum_alpha = .5,
+       show_points = FALSE,
+       show_slab = TRUE,
+       err_width = .2) 
+```
+
+## Groups
+
+```{r}
+gg_sum(cw,
+       x = time,
+       y = weight,
+      group = diet,
+       show_points = FALSE,
+       #show_slab = TRUE,
+       err_width = .2) + 
+  scale_color_viridis_d(end = .8) +
+  scale_fill_viridis_d(end = .8) +
+  theme_classic()
+```

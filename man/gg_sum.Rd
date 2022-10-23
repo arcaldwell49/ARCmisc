@@ -12,11 +12,15 @@ gg_sum(
   panel = NULL,
   trace = TRUE,
   show_points = TRUE,
+  show_summary = TRUE,
+  show_slab = FALSE,
   err_width = 0.2,
   sum_size = 1.25,
   sum_alpha = 1,
   point_size = 1,
-  point_alpha = 1
+  point_alpha = 1,
+  sum_color = "darkgrey",
+  point_color = "black"
 )
 }
 \arguments{
@@ -28,13 +32,17 @@ gg_sum(
 
 \item{trace}{TRUE/FALSE to connect summaries with line.}
 
-\item{show_points}{Logical indicator to show individual data points.}
+\item{show_points, show_summary, show}{Logical indicator of what to show on plot.}
 
 \item{err_width}{Width of error bars, or separation of groups.}
 
 \item{sum_size, sum_alpha}{Change parameters for summary statistics.}
 
 \item{point_size, point_alpha}{Change parameters for point data.}
+
+\item{sum_color}{Color for summary statistic (only used with groups == NULL).}
+
+\item{point_color}{Color for data points (only used with groups == NULL).}
 }
 \value{
 An ggplot object

@@ -278,7 +278,9 @@ plt_ngrp_pt = function(data,
                        point_alpha = 1,
                        err_width = .2,
                        show_summary = TRUE,
-                       show_slab = show_slab){
+                       show_slab = FALSE,
+                       sum_color = "black",
+                       point_color = "darkgrey"){
   if(show_points){
     x_nudge = err_width
   } else {
@@ -292,10 +294,10 @@ plt_ngrp_pt = function(data,
     g1 = g1 + geom_dots(dotsize = 1,
                         binwidth = .5*point_size,
                         side = "topleft",
-                        fill = "black",
+                        fill = point_color,
                         scale = .25,
                         alpha = point_alpha,
-                        color = "black",
+                        color = point_color,
                         layout = "weave")
     #geom_point(position=position_jitter(height = 0,
     #                          width = .2),
@@ -311,7 +313,7 @@ plt_ngrp_pt = function(data,
                         #scale = err_width,
                         alpha = point_alpha,
                         color = "black",
-                        fill = "darkgrey",
+                        fill = sum_color,
                         #layout = "weave",
                         position=position_dodge(err_width*2)
     )
@@ -325,7 +327,7 @@ plt_ngrp_pt = function(data,
       #size = 1.25 * 2,
       alpha = .75*sum_alpha,
       size = sum_size*.75,
-      color = "darkgray",
+      color = sum_color,
       position = position_nudge(x = x_nudge, y = 0)
     )
   }
@@ -339,13 +341,13 @@ plt_ngrp_pt = function(data,
                  alpha = sum_alpha,
                  width = err_width,
                  geom = "errorbar",
-                 colour = "darkgray", size = sum_size,
+                 colour = sum_color, size = sum_size,
                  position=position_nudge(x = x_nudge, y = 0)) +
     stat_summary(fun = sum_stat, geom = "point",
                  shape = "square",
                  size = sum_size*2,
                  alpha = sum_alpha,
-                 color = "darkgray",
+                 color = sum_color,
                  position=position_nudge(x = x_nudge, y = 0))
   }
 

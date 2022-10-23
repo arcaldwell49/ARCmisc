@@ -19,7 +19,7 @@
 #' @details
 #' Creats simple plots for summarizing factorial designs.
 #'
-#' @importFrom ggdist geom_dots geom_slab geom_slabinterval
+#' @importFrom ggdist geom_dots stat_slab geom_slabinterval
 #' @import ggplot2
 #' @export
 gg_sum = function(data,
