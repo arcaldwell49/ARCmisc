@@ -4,11 +4,12 @@
 #' Something that should save time for plotting data.
 #'
 #' @param x,y Columns to be plotted on x or y axis (x should be a factor).
+#' @param data an optional matrix or data frame (or similar: see model.frame) containing the variable. By default the variables are taken from environment.
 #' @param group A grouping factor for plotting different colors/dodge on the same axis.
 #' @param panel A factor by which to facet the plot.
 #' @param trace TRUE/FALSE to connect summaries with line.
 #' @param err_width Width of error bars, or separation of groups.
-#' @param show_points,show_summary,show Logical indicator of what to show on plot.
+#' @param show_points,show_summary,show_slab Logical indicator of what to show on plot.
 #' @param sum_size,sum_alpha Change parameters for summary statistics.
 #' @param point_size,point_alpha Change parameters for point data.
 #' @param sum_color Color for summary statistic (only used with groups == NULL).

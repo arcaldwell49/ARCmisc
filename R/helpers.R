@@ -443,3 +443,7 @@ plt_grp_pt = function(data,
 
   return(g1)
 }
+
+# Global variables -----
+
+utils::globalVariables(c("x","y", "group"))

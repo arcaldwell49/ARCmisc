@@ -24,6 +24,8 @@ gg_sum(
 )
 }
 \arguments{
+\item{data}{an optional matrix or data frame (or similar: see model.frame) containing the variable. By default the variables are taken from environment.}
+
 \item{x, y}{Columns to be plotted on x or y axis (x should be a factor).}
 
 \item{group}{A grouping factor for plotting different colors/dodge on the same axis.}
@@ -32,7 +34,7 @@ gg_sum(
 
 \item{trace}{TRUE/FALSE to connect summaries with line.}
 
-\item{show_points, show_summary, show}{Logical indicator of what to show on plot.}
+\item{show_points, show_summary, show_slab}{Logical indicator of what to show on plot.}
 
 \item{err_width}{Width of error bars, or separation of groups.}
 

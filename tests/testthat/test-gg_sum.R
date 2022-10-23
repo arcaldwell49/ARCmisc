@@ -53,5 +53,19 @@ test_that("basic run", {
                  point_alpha = .7,
                  point_color = "skyblue")
 
+  test7 = gg_sum(data = mt2,
+                 y = mpg,
+                 x = cyl,
+                 panel = am,
+                 point_alpha = .7,
+                 point_color = "skyblue")
+
+  expect_error(gg_sum(data = mt2,
+                      y = mpg,
+                      x = cyl,
+                      panel = 1,
+                      point_alpha = .7,
+                      point_color = "skyblue"))
+
 
 })

@@ -81,7 +81,9 @@ Something that should save time for plotting data.</p>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>x, y</dt>
+    <dl><dt>data</dt>
+<dd><p>an optional matrix or data frame (or similar: see model.frame) containing the variable. By default the variables are taken from environment.</p></dd>
+<dt>x, y</dt>
 <dd><p>Columns to be plotted on x or y axis (x should be a factor).</p></dd>
 <dt>group</dt>
 <dd><p>A grouping factor for plotting different colors/dodge on the same axis.</p></dd>
@@ -89,7 +91,7 @@ Something that should save time for plotting data.</p>
 <dd><p>A factor by which to facet the plot.</p></dd>
 <dt>trace</dt>
 <dd><p>TRUE/FALSE to connect summaries with line.</p></dd>
-<dt>show_points, show_summary, show</dt>
+<dt>show_points, show_summary, show_slab</dt>
 <dd><p>Logical indicator of what to show on plot.</p></dd>
 <dt>err_width</dt>
 <dd><p>Width of error bars, or separation of groups.</p></dd>

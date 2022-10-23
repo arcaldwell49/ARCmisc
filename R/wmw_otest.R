@@ -9,6 +9,7 @@
 #'   Any missing values (`NA`s) are dropped from the resulting vector. `x` can
 #'   also be a formula (see [`stats::wilcox.test()`]), in which case `y` is
 #'   ignored.
+#' @param data an optional matrix or data frame (or similar: see model.frame) containing the variable. By default the variables are taken from environment.
 #' @param mu a number indicating the value around which (a-)symmetry (for
 #'   one-sample or paired samples) or shift (for independent samples) is to be
 #'   estimated. See [stats::wilcox.test].
@@ -72,6 +73,7 @@
 #' outcomes. \emph{Stroke}, 43(3), 664-669.
 #'
 #' @importFrom datawizard ranktransform
+#' @importFrom stats complete.cases pnorm qnorm sd
 #' @export
 wmw_otest <- function(x,
                       y = NULL,
@@ -121,7 +123,11 @@ wmw_otest <- function(x,
     DNAME <- gsub("~", "by", Reduce(paste, deparse(x)))
   }
   ## Prep data
-  out <- .get_data_2_samples(x, y, data, verbose, ...)
+  out <- .get_data_2_samples(x=x, y=y, data=data,
+                             verbose = TRUE,
+                             paired = paired,
+                             allow_ordered = TRUE,
+                             ...)
   x <- out$x
   y <- out$y
 
