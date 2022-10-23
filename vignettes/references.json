@@ -1,0 +1,67 @@
+[
+    {
+        "DOI": "10.2307/2530495",
+        "ISSN": "0006-341X",
+        "URL": "http://dx.doi.org/10.2307/2530495",
+        "author": [
+            {
+                "family": "Agresti",
+                "given": "Alan"
+            }
+        ],
+        "container-title": "Biometrics",
+        "container-title-short": "Biometrics",
+        "id": "agresti1980",
+        "is-referenced-by-count": "65",
+        "issue": "1",
+        "issued": {
+            "date-parts": [
+                [
+                    1980,
+                    3
+                ]
+            ]
+        },
+        "member": "1121",
+        "page": "59",
+        "prefix": "10.2307",
+        "providerkey": "crossref",
+        "publisher": "JSTOR",
+        "reference-count": "0",
+        "references-count": "0",
+        "score": "1",
+        "source": "Crossref",
+        "subject": "Applied Mathematics",
+        "title": "Generalized Odds Ratios for Ordinal Data",
+        "type": "article-journal",
+        "volume": "36"
+    },
+
+    {
+        "URL": "http://www.asasrms.org/Proceedings/y2005/files/JSM2005-000930.pdf",
+        "author": [
+            {
+                "family": "O'Brien",
+                "given": "John"
+            },
+            {
+                "family": "Castelloe",
+                "given": "Ralph"
+            }
+        ],
+        "container-title": "SAS Proceedings",
+        "container-title-short": "SAS Proceedings",
+        "id": "wmw_odds",
+        "is-referenced-by-count": "65",
+        "issue": "209-31",
+        "issued": {
+            "date-parts": [
+                [
+                    2005
+                ]
+            ]
+        },
+        "title": "Exploiting the Link Between the Wilcoxon-Mann-Whitney Test and a Simple Odds Statistic",
+        "type": "article-journal"
+    }
+]

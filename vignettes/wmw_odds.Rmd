@@ -1,0 +1,59 @@
+---
+title: "Wilcoxon-Mann-Whitney Odds"
+subtitle: "A Rank Based Hypothesis Test"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Wilcoxon-Mann-Whitney Odds}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.json
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ARCmisc)
+```
+
+# Short Background
+
+As an alternative, or in supplement to, Wilcoxon-Mann-Whitney rank sum/signed rank tests @agresti1980 and @wmw_odds have suggested a measure of effect size in the form of "odds". This can be considered as a transformation of the rank-biserial correlation or the concordance probability^[You can see this in blog posts by [Frank Harrell](https://www.fharrell.com/post/wpo/) or in the [effectsize R package](https://easystats.github.io/effectsize/) ]
+
+# Implementation
+
+This is implemented with the `wmw_odds` function. It is almost identical to `wilcox.test`
+
+## Two sample
+
+```{r}
+data(sleep)
+
+wmw_otest(extra ~ group,
+         data = sleep)
+```
+
+## Paired samples
+
+```{r}
+data(sleep)
+
+wmw_otest(extra ~ group,
+         data = sleep,
+         paired = TRUE)
+```
+
+## One sample
+
+```{r}
+data(sleep)
+
+wmw_otest(sleep$extra)
+```
+
+
+# References

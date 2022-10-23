@@ -3,5 +3,6 @@ pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
   sum_plot: sum_plot.html
-last_built: 2022-10-23T00:37Z
+  wmw_odds: wmw_odds.html
+last_built: 2022-10-23T14:58Z
 
