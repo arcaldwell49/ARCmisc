@@ -11,6 +11,7 @@ gg_sum(
   group = NULL,
   panel = NULL,
   trace = TRUE,
+  sum_stat = c("mean", "median"),
   show_points = TRUE,
   show_summary = TRUE,
   show_slab = FALSE,
@@ -24,7 +25,7 @@ gg_sum(
 )
 }
 \arguments{
-\item{data}{an optional matrix or data frame (or similar: see model.frame) containing the variable. By default the variables are taken from environment.}
+\item{data}{A data frame.}
 
 \item{x, y}{Columns to be plotted on x or y axis (x should be a factor).}
 
@@ -33,6 +34,8 @@ gg_sum(
 \item{panel}{A factor by which to facet the plot.}
 
 \item{trace}{TRUE/FALSE to connect summaries with line.}
+
+\item{sum_stat}{Type of summary statistic. Options include mean (defualts) or median. Error bars will be the SD or IQR (25th and 75th percentile) for mean and median, respectively.}
 
 \item{show_points, show_summary, show_slab}{Logical indicator of what to show on plot.}
 
@@ -47,12 +50,12 @@ gg_sum(
 \item{point_color}{Color for data points (only used with groups == NULL).}
 }
 \value{
-An ggplot object
+A ggplot object.
 }
 \description{
 Function for simple factorial experiment plots.
 Something that should save time for plotting data.
 }
 \details{
-Creats simple plots for summarizing factorial designs.
+Creats simple plots for summarizing factorial designs. See vignettes for examples.
 }

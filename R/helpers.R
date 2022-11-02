@@ -255,6 +255,8 @@ zse_simp = function(z){
 # plot summaries ----
 
 ## need to fix summary functions
+
+### This... does not work...
 sum_sdl = function(x){
   mu = mean(x, na.rm = TRUE)
   lower = mu - sd(x, na.rm = TRUE)
@@ -265,6 +267,13 @@ sum_sdl = function(x){
 
   return(vec)
 }
+
+# Median + IQR summary
+#stat_summary(
+#  mapping = aes(x = cut, y = depth),
+#  fun.min = function(z) { quantile(z,0.25) },
+#  fun.max = function(z) { quantile(z,0.75) },
+#  fun = median)
 
 plt_ngrp_pt = function(data,
                        tpanel = FALSE,
@@ -334,21 +343,50 @@ plt_ngrp_pt = function(data,
 
   if(show_summary){
 
+    if(sum_stat == "mean"){
+      g1 = g1 +
+        stat_summary(fun.data = err_stat,
+                     fun.args = list(mult = 1),
+                     alpha = sum_alpha,
+                     width = err_width,
+                     geom = "errorbar",
+                     colour = sum_color, size = sum_size,
+                     position=position_nudge(x = x_nudge, y = 0)) +
+        stat_summary(fun = sum_stat, geom = "point",
+                     shape = "square",
+                     size = sum_size*2,
+                     alpha = sum_alpha,
+                     color = sum_color,
+                     position=position_nudge(x = x_nudge, y = 0))
+    } else {
 
-  g1 = g1 +
-    stat_summary(fun.data = err_stat,
-                 fun.args = list(mult = 1),
-                 alpha = sum_alpha,
-                 width = err_width,
-                 geom = "errorbar",
-                 colour = sum_color, size = sum_size,
-                 position=position_nudge(x = x_nudge, y = 0)) +
-    stat_summary(fun = sum_stat, geom = "point",
-                 shape = "square",
-                 size = sum_size*2,
-                 alpha = sum_alpha,
-                 color = sum_color,
-                 position=position_nudge(x = x_nudge, y = 0))
+      g1 = g1 +
+        stat_summary(
+          fun.min = function(z) {
+            quantile(z, 0.25)
+          },
+          fun.max = function(z) {
+            quantile(z, 0.75)
+          },
+          geom = "errorbar",
+          alpha = sum_alpha,
+          width = err_width,
+          colour = sum_color,
+          size = sum_size,
+          position = position_nudge(x = x_nudge,
+                                    y = 0)
+        ) +
+        stat_summary(
+          fun = "median",
+          geom = "point",
+          shape = "square",
+          size = sum_size * 2,
+          alpha = sum_alpha,
+          color = sum_color,
+          position = position_nudge(x = x_nudge, y = 0)
+        )
+    }
+
   }
 
   if(tpanel){

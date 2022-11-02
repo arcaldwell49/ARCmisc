@@ -50,7 +50,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/sum_plot.html">Summary Plots for Factorial Designs</a>
+      <a href="../articles/sum_plot.html">Simple Summary Plots</a>
     </li>
     <li>
       <a href="../articles/wmw_odds.html">Wilcoxon-Mann-Whitney Odds</a>
@@ -84,16 +84,16 @@ Test</h3>
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ARCmisc</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ARCmisc</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="short-background">Short Background<a class="anchor" aria-label="anchor" href="#short-background"></a>
 </h2>
 <p>As an alternative, or in supplement to, Wilcoxon-Mann-Whitney rank
 sum/signed rank tests <span class="citation">Agresti (1980)</span> and
-<span class="citation">O’Brien and Castelloe (2005)</span> have
-suggested a measure of effect size in the form of “odds”. This can be
-considered as a transformation of the rank-biserial correlation or the
-concordance probability<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<span class="citation">Castelloe and O’Brien (2005)</span> have
+suggested a measure of effect size in the form of “odds” <span class="citation">(Castelloe and O’Brien 2005; Agresti 1980)</span>. This
+can be considered as a transformation of the rank-biserial correlation
+or the concordance probability<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 </div>
 <div class="section level2">
 <h2 id="implementation">Implementation<a class="anchor" aria-label="anchor" href="#implementation"></a>
@@ -104,61 +104,61 @@ almost identical to <code>wilcox.test</code></p>
 <h3 id="two-sample">Two sample<a class="anchor" aria-label="anchor" href="#two-sample"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">sleep</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/wmw_otest.html">wmw_otest</a></span><span class="op">(</span><span class="va">extra</span> <span class="op">~</span> <span class="va">group</span>,
-         data <span class="op">=</span> <span class="va">sleep</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  Two-Sample Wilcoxon-Mann-Whitney Odds</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; data:  extra by group</span>
-<span class="co">#&gt; z = -0.53606, SE for z = 0.26458, p-value = 0.04275</span>
-<span class="co">#&gt; alternative hypothesis: true location shift is not equal to 0</span>
-<span class="co">#&gt; 95 percent confidence interval:</span>
-<span class="co">#&gt;  0.1213306 0.9656004</span>
-<span class="co">#&gt; sample estimates:</span>
-<span class="co">#&gt;      odds </span>
-<span class="co">#&gt; 0.3422819</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">sleep</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/wmw_otest.html">wmw_otest</a></span><span class="op">(</span><span class="va">extra</span> <span class="op">~</span> <span class="va">group</span>,</span>
+<span>         data <span class="op">=</span> <span class="va">sleep</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Two-Sample Wilcoxon-Mann-Whitney Odds</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; data:  extra by group</span></span>
+<span><span class="co">#&gt; z = -0.53606, SE for z = 0.26458, p-value = 0.04275</span></span>
+<span><span class="co">#&gt; alternative hypothesis: true location shift is not equal to 0</span></span>
+<span><span class="co">#&gt; 95 percent confidence interval:</span></span>
+<span><span class="co">#&gt;  0.1213306 0.9656004</span></span>
+<span><span class="co">#&gt; sample estimates:</span></span>
+<span><span class="co">#&gt;      odds </span></span>
+<span><span class="co">#&gt; 0.3422819</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="paired-samples">Paired samples<a class="anchor" aria-label="anchor" href="#paired-samples"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">sleep</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/wmw_otest.html">wmw_otest</a></span><span class="op">(</span><span class="va">extra</span> <span class="op">~</span> <span class="va">group</span>,
-         data <span class="op">=</span> <span class="va">sleep</span>,
-         paired <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  Paired Samples Wilcoxon-Mann-Whitney Odds</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; data:  extra by group</span>
-<span class="co">#&gt; z = -2.3457, SE for z = 0.35675, p-value = 4.863e-11</span>
-<span class="co">#&gt; alternative hypothesis: true location shift is not equal to 0</span>
-<span class="co">#&gt; 95 percent confidence interval:</span>
-<span class="co">#&gt;  0.002265875 0.037145907</span>
-<span class="co">#&gt; sample estimates:</span>
-<span class="co">#&gt;        odds </span>
-<span class="co">#&gt; 0.009174312</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">sleep</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/wmw_otest.html">wmw_otest</a></span><span class="op">(</span><span class="va">extra</span> <span class="op">~</span> <span class="va">group</span>,</span>
+<span>         data <span class="op">=</span> <span class="va">sleep</span>,</span>
+<span>         paired <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Paired Samples Wilcoxon-Mann-Whitney Odds</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; data:  extra by group</span></span>
+<span><span class="co">#&gt; z = -2.3457, SE for z = 0.35675, p-value = 4.863e-11</span></span>
+<span><span class="co">#&gt; alternative hypothesis: true location shift is not equal to 0</span></span>
+<span><span class="co">#&gt; 95 percent confidence interval:</span></span>
+<span><span class="co">#&gt;  0.002265875 0.037145907</span></span>
+<span><span class="co">#&gt; sample estimates:</span></span>
+<span><span class="co">#&gt;        odds </span></span>
+<span><span class="co">#&gt; 0.009174312</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="one-sample">One sample<a class="anchor" aria-label="anchor" href="#one-sample"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">sleep</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/wmw_otest.html">wmw_otest</a></span><span class="op">(</span><span class="va">sleep</span><span class="op">$</span><span class="va">extra</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  One-Sample Wilcoxon-Mann-Whitney Odds</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; data:  sleep$extra</span>
-<span class="co">#&gt; z = 0.83982, SE for z = 0.25511, p-value = 0.0009946</span>
-<span class="co">#&gt; alternative hypothesis: true location is not equal to 0</span>
-<span class="co">#&gt; 95 percent confidence interval:</span>
-<span class="co">#&gt;   1.973173 14.579867</span>
-<span class="co">#&gt; sample estimates:</span>
-<span class="co">#&gt;     odds </span>
-<span class="co">#&gt; 5.363636</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">sleep</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/wmw_otest.html">wmw_otest</a></span><span class="op">(</span><span class="va">sleep</span><span class="op">$</span><span class="va">extra</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  One-Sample Wilcoxon-Mann-Whitney Odds</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; data:  sleep$extra</span></span>
+<span><span class="co">#&gt; z = 0.83982, SE for z = 0.25511, p-value = 0.0009946</span></span>
+<span><span class="co">#&gt; alternative hypothesis: true location is not equal to 0</span></span>
+<span><span class="co">#&gt; 95 percent confidence interval:</span></span>
+<span><span class="co">#&gt;   1.973173 14.579867</span></span>
+<span><span class="co">#&gt; sample estimates:</span></span>
+<span><span class="co">#&gt;     odds </span></span>
+<span><span class="co">#&gt; 5.363636</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -170,17 +170,17 @@ Agresti, Alan. 1980. <span>“Generalized Odds Ratios for Ordinal
 Data.”</span> <em>Biometrics</em> 36 (1): 59. <a href="https://doi.org/10.2307/2530495" class="external-link">https://doi.org/10.2307/2530495</a>.
 </div>
 <div id="ref-wmw_odds" class="csl-entry">
-O’Brien, John, and Ralph Castelloe. 2005. <span>“Exploiting the Link
+Castelloe, Ralph, and John O’Brien. 2005. <span>“Exploiting the Link
 Between the Wilcoxon-Mann-Whitney Test and a Simple Odds
-Statistic.”</span> <em>SAS Proceedings</em>, no. 209-31. <a href="http://www.asasrms.org/Proceedings/y2005/files/JSM2005-000930.pdf" class="external-link">http://www.asasrms.org/Proceedings/y2005/files/JSM2005-000930.pdf</a>.
+Statistic.”</span> <a href="http://www.asasrms.org/Proceedings/y2005/files/JSM2005-000930.pdf" class="external-link">http://www.asasrms.org/Proceedings/y2005/files/JSM2005-000930.pdf</a>.
 </div>
 </div>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p>You can see this in blog posts by <a href="https://www.fharrell.com/post/wpo/" class="external-link">Frank Harrell</a> or in the <a href="https://easystats.github.io/effectsize/" class="external-link">effectsize R package</a>
-<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>You can see this in blog posts by <a href="https://www.fharrell.com/post/wpo/" class="external-link">Frank Harrell</a> or in the <a href="https://easystats.github.io/effectsize/" class="external-link">effectsize R
+package</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -202,7 +202,7 @@ Statistic.”</span> <em>SAS Proceedings</em>, no. 209-31. <a href="http://www.a
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

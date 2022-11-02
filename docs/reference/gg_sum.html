@@ -33,7 +33,7 @@ Something that should save time for plotting data."><!-- mathjax --><script src=
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/sum_plot.html">Summary Plots for Factorial Designs</a>
+      <a href="../articles/sum_plot.html">Simple Summary Plots</a>
     </li>
     <li>
       <a href="../articles/wmw_odds.html">Wilcoxon-Mann-Whitney Odds</a>
@@ -59,58 +59,86 @@ Something that should save time for plotting data.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gg_sum</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">x</span>,
-  <span class="va">y</span>,
-  group <span class="op">=</span> <span class="cn">NULL</span>,
-  panel <span class="op">=</span> <span class="cn">NULL</span>,
-  trace <span class="op">=</span> <span class="cn">TRUE</span>,
-  show_points <span class="op">=</span> <span class="cn">TRUE</span>,
-  show_summary <span class="op">=</span> <span class="cn">TRUE</span>,
-  show_slab <span class="op">=</span> <span class="cn">FALSE</span>,
-  err_width <span class="op">=</span> <span class="fl">0.2</span>,
-  sum_size <span class="op">=</span> <span class="fl">1.25</span>,
-  sum_alpha <span class="op">=</span> <span class="fl">1</span>,
-  point_size <span class="op">=</span> <span class="fl">1</span>,
-  point_alpha <span class="op">=</span> <span class="fl">1</span>,
-  sum_color <span class="op">=</span> <span class="st">"darkgrey"</span>,
-  point_color <span class="op">=</span> <span class="st">"black"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gg_sum</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">y</span>,</span>
+<span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  panel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  trace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  sum_stat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"median"</span><span class="op">)</span>,</span>
+<span>  show_points <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  show_summary <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  show_slab <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  err_width <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  sum_size <span class="op">=</span> <span class="fl">1.25</span>,</span>
+<span>  sum_alpha <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  point_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  point_alpha <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  sum_color <span class="op">=</span> <span class="st">"darkgrey"</span>,</span>
+<span>  point_color <span class="op">=</span> <span class="st">"black"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
-<dd><p>an optional matrix or data frame (or similar: see model.frame) containing the variable. By default the variables are taken from environment.</p></dd>
+<dd><p>A data frame.</p></dd>
+
+
 <dt>x, y</dt>
 <dd><p>Columns to be plotted on x or y axis (x should be a factor).</p></dd>
+
+
 <dt>group</dt>
 <dd><p>A grouping factor for plotting different colors/dodge on the same axis.</p></dd>
+
+
 <dt>panel</dt>
 <dd><p>A factor by which to facet the plot.</p></dd>
+
+
 <dt>trace</dt>
 <dd><p>TRUE/FALSE to connect summaries with line.</p></dd>
+
+
+<dt>sum_stat</dt>
+<dd><p>Type of summary statistic. Options include mean (defualts) or median. Error bars will be the SD or IQR (25th and 75th percentile) for mean and median, respectively.</p></dd>
+
+
 <dt>show_points, show_summary, show_slab</dt>
 <dd><p>Logical indicator of what to show on plot.</p></dd>
+
+
 <dt>err_width</dt>
 <dd><p>Width of error bars, or separation of groups.</p></dd>
+
+
 <dt>sum_size, sum_alpha</dt>
 <dd><p>Change parameters for summary statistics.</p></dd>
+
+
 <dt>point_size, point_alpha</dt>
 <dd><p>Change parameters for point data.</p></dd>
+
+
 <dt>sum_color</dt>
 <dd><p>Color for summary statistic (only used with groups == NULL).</p></dd>
+
+
 <dt>point_color</dt>
 <dd><p>Color for data points (only used with groups == NULL).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An ggplot object</p>
+    
+
+<p>A ggplot object.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>Creats simple plots for summarizing factorial designs.</p>
+    <p>Creats simple plots for summarizing factorial designs. See vignettes for examples.</p>
     </div>
 
   </div>
@@ -125,7 +153,7 @@ Something that should save time for plotting data.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

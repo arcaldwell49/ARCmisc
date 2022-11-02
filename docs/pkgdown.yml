@@ -1,8 +1,8 @@
 pandoc: '2.18'
-pkgdown: 2.0.3
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   sum_plot: sum_plot.html
   wmw_odds: wmw_odds.html
-last_built: 2022-10-23T21:25Z
+last_built: 2022-11-02T16:17Z
 

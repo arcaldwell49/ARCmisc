@@ -1,8 +1,8 @@
 ---
-title: "Summary Plots for Factorial Designs"
+title: "Simple Summary Plots"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Summary Plots for Factorial Designs}
+  %\VignetteIndexEntry{Simple Summary Plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 references: references.json
@@ -21,7 +21,8 @@ library(ggplot2)
 ```
 
 
-The `gg_sum` function can be used to create simple summaries of data from factorial experiments.
+The `gg_sum` function can be used to create simple summaries of data from factorial experiments. 
+The `gg_ident` function is meant to be used to visualize paired comparisons.
 Like all functions in this packages, they are created to simplify code that I commonly have to write.
 
 
@@ -29,13 +30,15 @@ Like all functions in this packages, they are created to simplify code that I co
 
 To start, let us use the `mtcars` dataset to make some simple plots.
 Just as a note, this plotting function is meant to plot 1 continuous variable,
-on the y-axis and then use factors to plot on the x-axis, color, or facets.
+on the y-axis and then use factors to plot on the x-axis, color, and/or facets.
 
 ```{r}
 mt2 = mtcars
 mt2$cyl = as.factor(mtcars$cyl)
 mt2$am = as.factor(mtcars$am)
 ```
+
+For the `gg_ident` example, we will use the `iris` data.
 
 # Simple one-way plot
 
@@ -149,4 +152,38 @@ gg_sum(cw,
   scale_color_viridis_d(end = .8) +
   scale_fill_viridis_d(end = .8) +
   theme_classic()
+```
+
+# Line-of-Identity Plots
+
+In some cases, we may have simple paired comparisons. Imagine that the `iris` data contains 4 measures under 4 separate conditions. 
+You may want to compare the differences between the conditions. 
+Therefore, you can use a line-of-identity (sometimes called "line of equality") 
+plot to determine the differentiation between the conditions. 
+This plot is good to use in these scenarios because the line can be viewed as
+the demarcation point a positive or negative effect.
+The more data points shifted in one direction would then indicate a stronger
+size/direction of effect.
+
+```{r}
+gg_ident(x = Sepal.Width,
+         y = Sepal.Length,
+         data = iris)
+```
+
+## Indicate Groupings
+
+The `group` or `panel` arguments can also be utilized.
+
+```{r}
+gg_ident(x = Sepal.Width,
+         y = Sepal.Length,
+         data = iris,
+         group = Species)
+```
+```{r}
+gg_ident(x = Sepal.Width,
+         y = Sepal.Length,
+         data = iris,
+         panel = Species)
 ```

@@ -4,23 +4,25 @@
 #' Something that should save time for plotting data.
 #'
 #' @param x,y Columns to be plotted on x or y axis (x should be a factor).
-#' @param data an optional matrix or data frame (or similar: see model.frame) containing the variable. By default the variables are taken from environment.
+#' @param data A data frame.
 #' @param group A grouping factor for plotting different colors/dodge on the same axis.
 #' @param panel A factor by which to facet the plot.
 #' @param trace TRUE/FALSE to connect summaries with line.
 #' @param err_width Width of error bars, or separation of groups.
+#' @param sum_stat Type of summary statistic. Options include mean (defualts) or median. Error bars will be the SD or IQR (25th and 75th percentile) for mean and median, respectively.
 #' @param show_points,show_summary,show_slab Logical indicator of what to show on plot.
 #' @param sum_size,sum_alpha Change parameters for summary statistics.
 #' @param point_size,point_alpha Change parameters for point data.
 #' @param sum_color Color for summary statistic (only used with groups == NULL).
 #' @param point_color Color for data points (only used with groups == NULL).
 #'
-#' @return An ggplot object
+#' @return A ggplot object.
 #'
 #' @details
-#' Creats simple plots for summarizing factorial designs.
+#' Creats simple plots for summarizing factorial designs. See vignettes for examples.
 #'
 #' @importFrom ggdist geom_dots stat_slab geom_slabinterval
+#' @importFrom stats quantile
 #' @import ggplot2
 #' @export
 gg_sum = function(data,
@@ -29,6 +31,7 @@ gg_sum = function(data,
                   group = NULL,
                   panel = NULL,
                   trace = TRUE,
+                  sum_stat = c("mean","median"),
                   show_points = TRUE,
                   show_summary = TRUE,
                   show_slab = FALSE,
@@ -82,6 +85,9 @@ gg_sum = function(data,
     )]
     colnames(df) = c("y","x")
   }
+
+  # Settings -----
+  sum_stat = match.arg(sum_stat)
   tpanel = ifelse(is.null(panel),
                   FALSE,
                   TRUE)
@@ -95,6 +101,7 @@ gg_sum = function(data,
                      show_points = show_points,
                      sum_size = sum_size,
                      sum_alpha = sum_alpha,
+                     sum_stat = sum_stat,
                      point_size = point_size,
                      point_alpha = point_alpha,
                      err_width = err_width,
