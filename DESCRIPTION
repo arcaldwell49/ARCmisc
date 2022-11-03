@@ -14,7 +14,8 @@ Imports:
     ggplot2,
     datawizard,
     ggdist,
-    insight
+    insight,
+    dplyr
 Depends: 
     R (>= 4.2)
 Suggests: 

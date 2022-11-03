@@ -187,3 +187,21 @@ gg_ident(x = Sepal.Width,
          data = iris,
          panel = Species)
 ```
+# Waterfall Plots
+
+In pre-post style studies, it may be useful to display the data using waterfall plot.
+These plots can show the distribution of responses relative to no effect (zero).
+
+```{r}
+set.seed(5467)
+df = data.frame(y = rnorm(30),
+                group = c(rep("A",15),rep("B",15)))
+
+gg_wf(y=y,
+      group = group,
+      panel = group,
+      data = df) +
+  theme_bw()
+
+```
+

@@ -3,7 +3,8 @@
 #' @description Function for line-of-identity visualizations.
 #' Something that should save time for plotting data for paired samples.
 #'
-#' @param x,y Columns to be plotted on x or y axis (x should be a factor).
+#'
+#' @param x,y Columns to be plotted on x or y axis (Both should be numeric).
 #' @param data A data frame.
 #' @param group A grouping factor for plotting different colors/dodge on the same axis.
 #' @param panel A factor by which to facet the plot.
@@ -15,8 +16,10 @@
 #'
 #' @details
 #' Creates simple "line of identity" plots for summarizing paired differences.
+#' The ggsides pacakge is a good complementary addition to this function.
 #'
 #' @import ggplot2
+#' @importFrom dplyr arrange
 #' @export
 gg_ident = function(x, y,
                     data,

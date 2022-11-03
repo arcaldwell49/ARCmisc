@@ -21,7 +21,7 @@ gg_ident(
 )
 }
 \arguments{
-\item{x, y}{Columns to be plotted on x or y axis (x should be a factor).}
+\item{x, y}{Columns to be plotted on x or y axis (Both should be numeric).}
 
 \item{data}{A data frame.}
 
@@ -44,4 +44,5 @@ Something that should save time for plotting data for paired samples.
 }
 \details{
 Creates simple "line of identity" plots for summarizing paired differences.
+The ggsides pacakge is a good complementary addition to this function.
 }
