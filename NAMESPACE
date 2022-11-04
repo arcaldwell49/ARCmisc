@@ -3,6 +3,7 @@
 export(gg_ident)
 export(gg_sum)
 export(gg_wf)
+export(rom_test)
 export(wmw_otest)
 import(ggplot2)
 importFrom(datawizard,ranktransform)

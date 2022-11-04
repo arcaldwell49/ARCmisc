@@ -35,8 +35,8 @@
 #'     \item{null.value}{The location parameter mu.}
 #'     \item{alternative}{A character string describing the alternative hypothesis.}
 #'     \item{method}{The name of the method to report.}
-#'     \item{data.name}{The confidence interval for the odds.}
-#'     \item{conf.int}{The location parameter mu.}
+#'     \item{data.name}{The data name.}
+#'     \item{conf.int}{The confidence interval fro the odds.}
 #'
 #'}
 #'
@@ -80,13 +80,12 @@ wmw_otest <- function(x,
                       data = NULL,
                       mu = 0,
                       ci = 0.95,
-                      ci_method = "normal",
-                      alternative = "two.sided",
+                      ci_method = c("normal","gamma"),
+                      alternative = c("two.sided","less","greater"),
                       paired = FALSE,
                       verbose = TRUE,
                       ...) {
-
-
+  ci_method = match.arg(ci_method)
   alternative <- match.arg(alternative)
   if(!missing(mu) && ((length(mu) > 1L) || !is.finite(mu)))
     stop("'mu' must be a single number")
