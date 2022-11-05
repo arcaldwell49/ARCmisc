@@ -65,8 +65,8 @@ rom_test <- function(x,
                      data = NULL,
                      null = 1,
                      ci = 0.95,
-                     ci_method = c("t","normal"),
-                     vtype = c("LS", "AV", "HO", "AVHO"),
+                     ci_method = c("normal","t"),
+                     vtype = c("ls","av"),
                      alternative = c("two.sided", "less", "greater"),
                      bias_c = TRUE,
                      paired = FALSE,
@@ -160,7 +160,7 @@ rom_test <- function(x,
       bias_c = bias_c,
       vtype = vtype,
       m1i = m1i,
-      sd1i = m2i,
+      sd1i = sd1i,
       n1i = n1i,
       m2i = m2i,
       sd2i = sd2i,
@@ -191,7 +191,7 @@ rom_test <- function(x,
       bias_c = bias_c,
       vtype = vtype,
       m1i = m1i,
-      sd1i = m2i,
+      sd1i = sd1i,
       n1i = n1i,
       m2i = m2i,
       sd2i = sd2i,
@@ -229,7 +229,7 @@ rom_test <- function(x,
 
     stderr = SE
     names(stderr) = "SE[log(rom)]"
-    STATISTIC = log_val$log_rom
+    STATISTIC = (log_val$log_rom-null)/SE
     names(STATISTIC) = "t"
     PARA = df1
     names(PARA) = "df"
