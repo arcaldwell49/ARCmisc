@@ -52,6 +52,10 @@
 #' Lajeunesse, M. J. (2011). On the meta‐analysis of response ratios for studies with correlated and multi‐group designs. Ecology, 92(11), 2049-2055 .https://doi.org/10.1890/11-0423.1
 #'
 #' Lajeunesse, M. J. (2015). Bias and correction for the log response ratio in ecological meta‐analysis. Ecology, 96(8), 2056-2063. https://doi.org/10.1890/14-2402.1
+#'
+#' Kieser, M. and Hauschke, D. (1999) Approximate Sample Sizes for Testing Hypotheses about the Ratio and Difference of Two Means. Journal of Biopharmaceutical Studies, 9(4)  641-650.
+#'
+#' Hauschke, D. et al  (1999). Sample Size Determination for Proving Equivalence Based on the Ratio of Two Means for Normally Distributed Data. Statistics in Medicine, 18,  93-105.
 #' @importFrom datawizard ranktransform
 #' @importFrom stats complete.cases pnorm qnorm sd
 #' @export
@@ -62,7 +66,7 @@ rom_test <- function(x,
                      null = 1,
                      ci = 0.95,
                      ci_method = c("t","normal"),
-                     vtype = c("LS", "HO", "AV", "AVHO"),
+                     vtype = c("LS", "AV", "HO", "AVHO"),
                      alternative = c("two.sided", "less", "greater"),
                      bias_c = TRUE,
                      paired = FALSE,

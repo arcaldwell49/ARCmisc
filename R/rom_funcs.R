@@ -1,7 +1,7 @@
 
 logrom_calc = function(paired = FALSE,
                        bias_c = TRUE,
-                       vtype = "HO",
+                       vtype = "LS",
                        m1i,
                        sd1i,
                        n1i,
