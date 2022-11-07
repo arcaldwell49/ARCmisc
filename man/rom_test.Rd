@@ -10,8 +10,7 @@ rom_test(
   data = NULL,
   null = 1,
   ci = 0.95,
-  ci_method = c("t", "normal"),
-  vtype = c("HO", "LS", "AV", "AVHO"),
+  ci_method = c("normal", "t"),
   alternative = c("two.sided", "less", "greater"),
   bias_c = TRUE,
   paired = FALSE,
@@ -32,8 +31,6 @@ ignored.}
 \item{ci}{Confidence level of the interval.}
 
 \item{ci_method}{Method for calculating confidence levels.}
-
-\item{vtype}{Method by which variance is calculated for two independent samples. Ignored in cases of paired samples. Default is "HO" for homogeneity assumed.}
 
 \item{alternative}{a character string specifying the alternative hypothesis;
 Controls the type of CI returned: `"two.sided"` (default, two-sided CI),
@@ -83,4 +80,8 @@ rom_otest(extra ~ group, data = sleep, paired = TRUE)
 Lajeunesse, M. J. (2011). On the meta‐analysis of response ratios for studies with correlated and multi‐group designs. Ecology, 92(11), 2049-2055 .https://doi.org/10.1890/11-0423.1
 
 Lajeunesse, M. J. (2015). Bias and correction for the log response ratio in ecological meta‐analysis. Ecology, 96(8), 2056-2063. https://doi.org/10.1890/14-2402.1
+
+Kieser, M. and Hauschke, D. (1999) Approximate Sample Sizes for Testing Hypotheses about the Ratio and Difference of Two Means. Journal of Biopharmaceutical Studies, 9(4)  641-650.
+
+Hauschke, D. et al  (1999). Sample Size Determination for Proving Equivalence Based on the Ratio of Two Means for Normally Distributed Data. Statistics in Medicine, 18,  93-105.
 }

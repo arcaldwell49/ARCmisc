@@ -11,7 +11,6 @@
 #' @param null a number indicating the value of the null hypothesis. See [stats::wilcox.test].
 #' @param ci Confidence level of the interval.
 #' @param ci_method Method for calculating confidence levels.
-#' @param vtype Method by which variance is calculated for two independent samples. Ignored in cases of paired samples. Default is "LS".
 #' @param bias_c Bias correction for small samples. Default is TRUE.
 #' @param alternative a character string specifying the alternative hypothesis;
 #'   Controls the type of CI returned: `"two.sided"` (default, two-sided CI),
@@ -66,7 +65,6 @@ rom_test <- function(x,
                      null = 1,
                      ci = 0.95,
                      ci_method = c("normal","t"),
-                     vtype = c("ls","av"),
                      alternative = c("two.sided", "less", "greater"),
                      bias_c = TRUE,
                      paired = FALSE,
@@ -74,10 +72,10 @@ rom_test <- function(x,
                      ...) {
   ci_method = match.arg(ci_method)
   alternative <- match.arg(alternative)
-  vtype = match.arg(vtype)
-  if(paired && vtype != "HO"){
-    message("vtype has no effect on paired results.")
-  }
+  #vtype = match.arg(vtype)
+  #if(paired && vtype != "HO"){
+  #  message("vtype has no effect on paired results.")
+  #}
   if(!missing(null) && ((length(null) > 1L) || !is.finite(null)) || null <= 0)
     stop("'null' must be a single, positive number")
   if (!is.numeric(ci)) {
@@ -158,7 +156,7 @@ rom_test <- function(x,
     log_val = logrom_calc(
       paired = TRUE,
       bias_c = bias_c,
-      vtype = vtype,
+      vtype = "LS",
       m1i = m1i,
       sd1i = sd1i,
       n1i = n1i,
@@ -189,7 +187,7 @@ rom_test <- function(x,
     log_val = logrom_calc(
       paired = FALSE,
       bias_c = bias_c,
-      vtype = vtype,
+      vtype = "LS",
       m1i = m1i,
       sd1i = sd1i,
       n1i = n1i,
