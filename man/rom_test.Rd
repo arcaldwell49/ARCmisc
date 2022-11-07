@@ -10,7 +10,7 @@ rom_test(
   data = NULL,
   null = 1,
   ci = 0.95,
-  ci_method = c("normal", "t"),
+  ci_method = c("t", "normal"),
   alternative = c("two.sided", "less", "greater"),
   bias_c = TRUE,
   paired = FALSE,
