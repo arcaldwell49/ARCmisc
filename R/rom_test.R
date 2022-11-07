@@ -210,7 +210,7 @@ rom_test <- function(x,
 
     SE <- sqrt(log_val$var_rom)
     interval <- exp(log_val$log_rom + c(-1, 1) * qnorm(1 - alpha / 2) * SE)
-    p_value = p_from_z(log_val$log_rom-null, alternative, SE)
+    p_value = p_from_z(log_val$log_rom-log(null), alternative, SE)
     stderr = SE
     names(stderr) = "SE[log(rom)]"
     STATISTIC = log_val$log_rom
@@ -223,7 +223,7 @@ rom_test <- function(x,
   if (ci_method == "t"){
     SE <- sqrt(log_val$var_rom)
     interval <- exp(log_val$log_rom + c(-1, 1) * qt(1 - alpha / 2,df1) * SE)
-    p_value = p_from_t((log_val$log_rom-null)/SE, alternative, df = df1)
+    p_value = p_from_t((log_val$log_rom-log(null))/SE, alternative, df = df1)
 
     stderr = SE
     names(stderr) = "SE[log(rom)]"
