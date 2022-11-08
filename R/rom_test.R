@@ -1,28 +1,10 @@
 #' Ratio of Means Test
 #'
 #' @description Performs a test on a ratio of means.
-#'
-#'
-#' @param x,y A numeric or ordered vector, or a character name of one in `data`.
-#'   Any missing values (`NA`s) are dropped from the resulting vector. `x` can
-#'   also be a formula (see [`stats::wilcox.test()`]), in which case `y` is
-#'   ignored.
-#' @param data an optional matrix or data frame (or similar: see model.frame) containing the variable. By default the variables are taken from environment.
 #' @param null a number indicating the value of the null hypothesis. See [stats::wilcox.test].
-#' @param ci Confidence level of the interval.
 #' @param ci_method Method for calculating confidence levels.
 #' @param bias_c Bias correction for small samples. Default is TRUE.
-#' @param alternative a character string specifying the alternative hypothesis;
-#'   Controls the type of CI returned: `"two.sided"` (default, two-sided CI),
-#'   `"greater"` or `"less"` (one-sided CI). Partial matching is allowed (e.g.,
-#'   `"g"`, `"l"`, `"two"`...).
-#' @param data An optional data frame containing the variables.
-#' @param paired If `TRUE`, the values of `x` and `y` are considered as paired.
-#'   This produces an effect size that is equivalent to the one-sample effect
-#'   size on `x - y`.
-#' @param verbose Toggle warning messages on or off.
-#' @param ... Arguments passed to or from other methods. When `x` is a formula,
-#'   these can be `subset` and `na.action`.
+#' @inheritParams wmw_otest
 #'
 #' @return An object of the class `htest`.
 #' \describe{

@@ -19,7 +19,12 @@ rom_test(
 )
 }
 \arguments{
-\item{x, y}{A numeric or ordered vector, or a character name of one in `data`.
+\item{x}{A numeric or ordered vector, or a character name of one in `data`.
+Any missing values (`NA`s) are dropped from the resulting vector. `x` can
+also be a formula (see [`stats::wilcox.test()`]), in which case `y` is
+ignored.}
+
+\item{y}{A numeric or ordered vector, or a character name of one in `data`.
 Any missing values (`NA`s) are dropped from the resulting vector. `x` can
 also be a formula (see [`stats::wilcox.test()`]), in which case `y` is
 ignored.}
