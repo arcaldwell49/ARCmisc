@@ -27,7 +27,7 @@
 #' @examples
 #' # Use the sleep data
 #'
-#' rom_otest(extra ~ group, data = sleep, paired = TRUE)
+#' rom_test(mpg ~ am, data = mtcars, paired = FALSE)
 #'
 #' @references
 #' Lajeunesse, M. J. (2011). On the meta‐analysis of response ratios for studies with correlated and multi‐group designs. Ecology, 92(11), 2049-2055 .https://doi.org/10.1890/11-0423.1
@@ -38,7 +38,7 @@
 #'
 #' Hauschke, D. et al  (1999). Sample Size Determination for Proving Equivalence Based on the Ratio of Two Means for Normally Distributed Data. Statistics in Medicine, 18,  93-105.
 #' @importFrom datawizard ranktransform
-#' @importFrom stats complete.cases pnorm qnorm sd
+#' @importFrom stats complete.cases pnorm qnorm sd cor pt qt
 #' @export
 
 rom_test <- function(x,
@@ -127,6 +127,9 @@ rom_test <- function(x,
     m2i = mean(y)
     sd2i = sd(y)
     n2i = length(y)
+    if(length(x) != length(y)){
+      stop("Lengths of x and y do not match.")
+    }
     ri = cor(x,y)
 
     if(n1i != n2i){

@@ -78,7 +78,7 @@ vtype details
 \examples{
 # Use the sleep data
 
-rom_otest(extra ~ group, data = sleep, paired = TRUE)
+rom_test(mpg ~ am, data = mtcars, paired = FALSE)
 
 }
 \references{

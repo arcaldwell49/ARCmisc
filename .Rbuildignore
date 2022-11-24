@@ -3,3 +3,4 @@
 ^mess$
 docs
 ^\.github$
+^NEWS.md
