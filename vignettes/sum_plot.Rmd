@@ -76,6 +76,16 @@ gg_sum(
   x = cyl,
   group = am,
 ) + theme_classic()
+
+
+gg_sum(
+  data = mt2,
+  y = mpg,
+  x = cyl,
+  group = am,
+  trace = TRUE,
+  sum_alpha = .4
+) + theme_classic()
 ```
 
 ## Customized

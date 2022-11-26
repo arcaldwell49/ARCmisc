@@ -10,8 +10,8 @@ wmw_otest(
   data = NULL,
   mu = 0,
   ci = 0.95,
-  ci_method = "normal",
-  alternative = "two.sided",
+  ci_method = c("normal", "gamma"),
+  alternative = c("two.sided", "less", "greater"),
   paired = FALSE,
   verbose = TRUE,
   ...
@@ -56,8 +56,8 @@ An object of the class `htest`.
     \item{null.value}{The location parameter mu.}
     \item{alternative}{A character string describing the alternative hypothesis.}
     \item{method}{The name of the method to report.}
-    \item{data.name}{The confidence interval for the odds.}
-    \item{conf.int}{The location parameter mu.}
+    \item{data.name}{The data name.}
+    \item{conf.int}{The confidence interval fro the odds.}
 
 }
 }

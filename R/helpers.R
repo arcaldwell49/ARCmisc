@@ -173,6 +173,16 @@ p_from_z <- function(x, alternative = "two.sided", se = 1){
   return(p)
 }
 
+p_from_t <- function(x, alternative = "two.sided", df){
+
+  p = switch(alternative,
+             "two.sided" = 2*pt(abs(x), df = df, lower.tail = FALSE),
+             "greater" = pt(x, df = df, lower.tail = FALSE),
+             "less" = pt(x, df = df, lower.tail = TRUE))
+
+  return(p)
+}
+
 p_from_odds = function(x, alternative = "two.sided", se = 1){
   p = switch(alternative,
              "two.sided" = pnorm(abs(log(x)),sd=se,lower.tail=FALSE)*2,
